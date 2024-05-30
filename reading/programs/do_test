@@ -1,0 +1,44 @@
+#!/usr/bin/python3
+
+import sys
+import subprocess
+
+# 0xff 0x04 A 0x04(EOF) -> should generate word token aaaa
+# type: 0 token: this
+# type: 1 token: ' '
+# type: 0 token: is
+# type: 1 token: ' '
+# type: 0 token: spartaaaa
+# type: 1 token: (EOF)
+# type: 1 token: !
+
+#sys.stdout.buffer.write(b"this is spart\xff\x04a\x04!")
+payload = b"this is spart\xff\x04a\x04"
+#payload = b"this is spart\xff\x04a and bata!"
+#payload = b"sweet mangoes and red beetroot."
+#payload = b"sw\xff\x02et mangoes and red b\xff\x02etroot."
+
+if len(sys.argv) == 1:
+    sys.stdout.buffer.write(payload)
+    sys.exit(0)
+
+if len(sys.argv) < 2:
+    print(f"Usage: {sys.argv[0]} EXECUTABLE")
+    sys.exit(1)
+
+exec_path = sys.argv[1]
+
+proc = subprocess.Popen(exec_path,
+                        stdin=subprocess.PIPE,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE)
+
+proc.stdin.write(payload)
+
+output, error = proc.communicate()
+
+if proc.returncode != 0:
+    print(f"Error executing {exec_path}: {error.decode()}")
+    sys.exit(1)
+
+print(output.decode())
