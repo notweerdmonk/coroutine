@@ -71,7 +71,7 @@ void* evaluate_postfix(char expr, int *result) {
       } while (isdigit(expr)) ;
 
       stack_push(&s, operand);
-      operand = 0;;
+      operand = 0;
     }
 
     if (isoperator(expr)) {
