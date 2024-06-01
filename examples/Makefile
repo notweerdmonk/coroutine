@@ -15,7 +15,7 @@ DEBUG_OPTIONS := -ggdb3 -save-temps=obj
 CFLAGS = $(DEBUG_OPTIONS) $(OPTIMIZATION) -Wall -Wextra -Wno-implicit-fallthrough
 
 ifneq ($(AVR),)
-CFLAGS += -Os
+OPTIMIZATION += -Os
 endif
 
 ifeq ($(INCLUDE),)
@@ -31,6 +31,8 @@ LDLIBS =
 COMPILE = $(CC) $(CFLAGS) $(INCLUDE) -c -o"$@" "$<" $(LDLIBS) $(LDFLAGS)
 
 SRCS :=\
+coroutine_nostatic.c \
+coroutine_concurrent.c \
 coroutine_delegation.c \
 coroutine_rpn.c
 
