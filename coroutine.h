@@ -10,13 +10,20 @@
 
 #include <stdint.h>
 
+#undef thread_local
+#ifdef __GNUC__
+#define thread_local __thread
+#else
+#define thread_local _Thread_local
+#endif
+
 /**
  * @brief Begin a coroutine inside a function.
  *
  * There can be only one coroutine inside a function.
  */
 #define COROUTINE_BEGIN() \
-  static int16_t cr_state = 0; switch(cr_state) { case 0:
+  static thread_local int16_t cr_state = 0; switch(cr_state) { case 0:
 
 /**
  * @brief Return from the function using a coroutine. 
