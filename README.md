@@ -186,6 +186,63 @@ delegated() called 3rd time, m = 3, n = 6.
 Calling coroutine() after delegated() finishes, m = 4.
 ```
 
+#### Another application
+
+Coroutines can be used to implement generators. The examples contain an implementation of a generator that can be used to loop over an integral range.
+
+```c
+void* generator(int start, int stop, int step, int *val) {
+
+  static thread_local int *range = NULL;
+  size_t len = (stop - start) / step; 
+
+  COROUTINE_BEGIN();
+
+  if (!range) {
+    range = (int*)malloc(len * sizeof(int));
+    if (!range) {
+      printf("Malloc for size %ld failed: %s\n", len * sizeof(int),
+          strerror(errno));
+      COROUTINE_ERROR();
+    }
+
+    for (size_t i = 0; i < len; i++) {
+      range[i] = start + (i * step);
+    }
+  }
+
+  static thread_local size_t idx = 0;
+  do {
+    if (val) {
+      *val = range[idx++];
+      if (idx == len) {
+        break;
+      }
+
+      COROUTINE_YIELD();
+    }
+  } while (idx < len);
+
+  idx = 0;
+  free(range);
+  range = NULL;
+
+  COROUTINE_RESET();
+  COROUTINE_END();
+}
+
+int main() {
+
+  for (int i = 0; i < 10; i++) {
+    int val;
+    generator(0, 10, 2, &val);
+    printf("Count is %d\n", val);
+  }
+
+  return 0;
+}
+```
+
 
 
 [^1]: https://en.wikipedia.org/wiki/Duff's_device
