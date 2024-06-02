@@ -41,7 +41,7 @@
  * @brief Call another function containing a coroutine and return.
  *
  * The callee function gets called every time the caller function
- * is called untill COROUTINE_STOP() is used inside the callee. In that case
+ * is called until COROUTINE_STOP() is used inside the callee. In that case
  * execution continues normally from this point in the caller function.
  *
  * @return Address of the coroutine state variable.
