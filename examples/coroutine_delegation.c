@@ -1,21 +1,41 @@
 #include <stdio.h>
 #include <coroutine.h>
 
-void* delegated(int m) {
+void *delegated2(int m, int n) {
+  static int o;
+
+  COROUTINE_BEGIN()
+
+  printf("delegated2() called 1st time, m = %d, n = %d, o = %d.\n", m, n, ++o);
+
+  COROUTINE_YIELD();
+
+  printf("delegated2() called 2nd time, m = %d, n = %d, o = %d.\n", m, n, ++o);
+
+  COROUTINE_YIELD();
+
+  printf("delegated2() called 2nd time, m = %d, n = %d, o = %d.\n", m, n, ++o);
+
+  COROUTINE_STOP();
+}
+
+void* delegated1(int m) {
   
   static int n;
 
   COROUTINE_BEGIN();
 
-  printf("delegated() called 1st time, m = %d, n = %d.\n", m, ++n);
+  printf("delegated1() called 1st time, m = %d, n = %d.\n", m, ++n);
 
   COROUTINE_YIELD();
 
-  printf("delegated() called 2nd time, m = %d, n = %d.\n", m, ++n);
+  printf("delegated1() called 2nd time, m = %d, n = %d.\n", m, ++n);
 
   COROUTINE_YIELD();
 
-  printf("delegated() called 3rd time, m = %d, n = %d.\n", m, ++n);
+  printf("delegated1() called 3rd time, m = %d, n = %d.\n", m, ++n);
+
+  COROUTINE_DELEGATE(delegated2, m, n);
 
   COROUTINE_STOP();
 }
@@ -32,16 +52,16 @@ void* coroutine() {
 
   printf("Delegating coroutine, m = %d.\n", m);
 
-  COROUTINE_DELEGATE(delegated, m);
+  COROUTINE_DELEGATE(delegated1, m);
 
-  printf("Calling coroutine() after delegated() finishes, m = %d.\n", ++m);
+  printf("Calling coroutine() after delegated1() finishes, m = %d.\n", ++m);
 
   COROUTINE_END();
 }
 
 int main() {
 
-  for (int i = 0; i < 8; i++) {
+  for (int i = 0; i < 12; i++) {
     coroutine();
   }
 
