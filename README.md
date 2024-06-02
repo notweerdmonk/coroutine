@@ -214,13 +214,14 @@ void* generator(int start, int stop, int step, int *val) {
   static thread_local size_t idx = 0;
   do {
     if (val) {
-      *val = range[idx++];
-      if (idx == len) {
-        break;
-      }
-
-      COROUTINE_YIELD();
+      *val = range[idx];
     }
+
+    if (++idx == len) {
+      break;
+    }
+    COROUTINE_YIELD();
+
   } while (idx < len);
 
   idx = 0;
