@@ -31,6 +31,7 @@ LDLIBS =
 COMPILE = $(CC) $(CFLAGS) $(INCLUDE) -c -o"$@" "$<" $(LDLIBS) $(LDFLAGS)
 
 SRCS :=\
+coroutine_generator.c \
 coroutine_nostatic.c \
 coroutine_concurrent.c \
 coroutine_delegation.c \
