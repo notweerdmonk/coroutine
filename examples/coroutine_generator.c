@@ -7,7 +7,7 @@
 void* generator(int start, int stop, int step, int *val) {
 
   static thread_local int *range = NULL;
-  size_t len = (stop - start) / step; 
+  size_t len = (stop - start) / (step == 0 ? 1 : step); 
 
   COROUTINE_BEGIN();
 
