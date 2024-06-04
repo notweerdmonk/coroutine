@@ -13,8 +13,12 @@ void* generator(int start, int stop, int step, int *val) {
 
   if (!range) {
     if(!(range = (int*)malloc(len * sizeof(int)))) {
+#ifdef __AVR
+      printf("Malloc for size %u failed\n", len * sizeof(int));
+#else
       printf("Malloc for size %ld failed: %s\n", len * sizeof(int),
           strerror(errno));
+#endif
       COROUTINE_ERROR();
     }
 

@@ -136,7 +136,7 @@ int main(void) {
 
 #### Nested coroutines
 
-Calls to coroutine functions can be nested. Execution is delegated to a child coroutine function using `COROUTINE_DELEGATE(delegated_fn, ...)`. Each time the parent function gets called it shall in turn call the child function until the child function uses `COROUTINE_RESET()` or `COROUTINE_STOP()` (instead of `COROUTINE_END()`). After the child coroutine terminates, execution shall continue from the point at which `COROUTINE_DELEGATE` got used in the parent coroutine function. The example below demonstrates nested coroutines with a depth of two.
+Calls to coroutine functions can be nested. Execution is delegated to a child coroutine function using `COROUTINE_DELEGATE(delegated_fn, ...)`. Each time the parent function gets called it shall in turn call the child function until the child function uses `COROUTINE_RESET()` or `COROUTINE_STOP()` (instead of `COROUTINE_END()`). After the child coroutine terminates, execution shall continue from the point at which `COROUTINE_DELEGATE` was used in the parent coroutine function. The example below demonstrates nested coroutines with a depth of two.
 
 ```c
 void* delegated(int m) {

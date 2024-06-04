@@ -30,12 +30,16 @@ LDLIBS =
 
 COMPILE = $(CC) $(CFLAGS) $(INCLUDE) -c -o"$@" "$<" $(LDLIBS) $(LDFLAGS)
 
-SRCS :=\
+SRCS := \
 coroutine_generator.c \
+coroutine_rpn.c \
+coroutine_delegation.c
+
+ifeq ($(AVR),)
+SRCS +=\
 coroutine_nostatic.c \
-coroutine_concurrent.c \
-coroutine_delegation.c \
-coroutine_rpn.c
+coroutine_concurrent.c
+endif
 
 OBJS = $(SRCS:.c=.o)
 
